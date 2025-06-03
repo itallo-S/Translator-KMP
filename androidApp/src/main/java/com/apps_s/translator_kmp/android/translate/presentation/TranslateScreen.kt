@@ -1,6 +1,7 @@
 package com.apps_s.translator_kmp.android.translate.presentation
 
 import android.content.ClipData
+import android.speech.tts.TextToSpeech
 import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
@@ -8,21 +9,35 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material3.FabPosition
+import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.ClipEntry
 import androidx.compose.ui.platform.LocalClipboard
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.dp
 import com.apps_s.translator_kmp.android.R
 import com.apps_s.translator_kmp.android.translate.presentation.components.LanguageDropDown
 import com.apps_s.translator_kmp.android.translate.presentation.components.SwapLanguagesButton
 import com.apps_s.translator_kmp.android.translate.presentation.components.TranslateTextField
+import com.apps_s.translator_kmp.android.translate.presentation.components.rememberTextToSpeech
+import com.apps_s.translator_kmp.translate.domain.translate.TranslateError
 import com.apps_s.translator_kmp.translate.presentation.TranslateEvent
 import com.apps_s.translator_kmp.translate.presentation.TranslateState
 import kotlinx.coroutines.launch
@@ -33,9 +48,44 @@ fun TranslateScreen(
     state: TranslateState, onEvent: (TranslateEvent) -> Unit
 ) {
     val context = LocalContext.current
+
+    LaunchedEffect(state.error) {
+        val messages = when (state.error) {
+            TranslateError.SERVICE_UNAVAILABLE -> context.getString(R.string.error_service_unvailable)
+            TranslateError.CLIENT_ERROR -> context.getString(R.string.client_error)
+            TranslateError.SERVER_ERROR -> context.getString(R.string.server_error)
+            TranslateError.UNKNOWN_ERROR -> context.getString(R.string.unknown_error)
+            null -> null
+        }
+        messages?.let {
+            Toast.makeText(
+                context,
+                it,
+                Toast.LENGTH_LONG
+            ).show()
+            onEvent(TranslateEvent.OnErrorSeen)
+        }
+    }
+
     Scaffold(
         floatingActionButton = {
-        }) { padding ->
+            FloatingActionButton(
+                onClick = {
+                    onEvent(TranslateEvent.RecordAudio)
+                },
+                containerColor = MaterialTheme.colorScheme.primary,
+                contentColor = MaterialTheme.colorScheme.onPrimary,
+                shape = CircleShape,
+                modifier = Modifier.size(75.dp)
+            ) {
+                Icon(
+                    imageVector = ImageVector.vectorResource(R.drawable.mic),
+                    contentDescription = stringResource(R.string.record_audio)
+                )
+            }
+        },
+        floatingActionButtonPosition = FabPosition.Center
+    ) { padding ->
         LazyColumn(
             modifier = Modifier
                 .fillMaxSize()
@@ -85,6 +135,7 @@ fun TranslateScreen(
                 val keyboardController = LocalSoftwareKeyboardController.current
 
                 val scope = rememberCoroutineScope()
+                val tts = rememberTextToSpeech()
 
                 TranslateTextField(
                     fromText = state.fromText,
@@ -113,10 +164,34 @@ fun TranslateScreen(
                         onEvent(TranslateEvent.CloseTranslation)
                     },
                     onSpeakerClick = {
+                        tts.speak(
+                            state.toText,
+                            TextToSpeech.QUEUE_FLUSH,
+                            null,
+                            null
+                        )
 
                     },
                     onTextFieldClick = {
                         onEvent(TranslateEvent.EditTranslation)
+                    },
+                    modifier = Modifier.fillMaxWidth()
+
+                )
+            }
+            item {
+                if (state.history.isNotEmpty()) {
+                    Text(
+                        text = stringResource(R.string.history),
+                        style = MaterialTheme.typography.titleMedium
+                    )
+                }
+            }
+            items(state.history, key = { it.id }) { item ->
+                TranslateHistoryItem(
+                    item = item,
+                    onClick = {
+                        onEvent(TranslateEvent.SelectHistoryItem(item))
                     },
                     modifier = Modifier.fillMaxWidth()
                 )
