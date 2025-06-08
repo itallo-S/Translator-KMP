@@ -41,6 +41,7 @@ import com.apps_s.translator_kmp.translate.domain.translate.TranslateError
 import com.apps_s.translator_kmp.translate.presentation.TranslateEvent
 import com.apps_s.translator_kmp.translate.presentation.TranslateState
 import kotlinx.coroutines.launch
+import java.util.Locale
 
 
 @Composable
@@ -164,6 +165,7 @@ fun TranslateScreen(
                         onEvent(TranslateEvent.CloseTranslation)
                     },
                     onSpeakerClick = {
+                        tts.language = state.toLanguage.toLocale() ?: Locale.ENGLISH
                         tts.speak(
                             state.toText,
                             TextToSpeech.QUEUE_FLUSH,

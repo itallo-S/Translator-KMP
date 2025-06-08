@@ -8,7 +8,7 @@ import com.apps_s.translator_kmp.translate.data.translate.KtorTranslateClient
 import com.apps_s.translator_kmp.translate.domain.history.HistoryDataSource
 import com.apps_s.translator_kmp.translate.domain.translate.Translate
 import com.apps_s.translator_kmp.translate.domain.translate.TranslateClient
-rainhavermelha
+
 class AppModule {
     val historyDataSource: HistoryDataSource by lazy {
         SqlDelightHistoryDataSource(

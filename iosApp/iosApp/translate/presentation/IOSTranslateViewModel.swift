@@ -21,13 +21,12 @@ extension TranslateScreen {
             toText: nil,
             isTranslating: false,
             fromLanguage: UiLanguage(language: .english, imageName: "english"),
-            toLanguage: UiLanguage(language: .german, imageName: "portuguese"),
+            toLanguage: UiLanguage(language: .german, imageName: "german"),
             isChoosingFromLanguage: false,
             isChoosingToLanguage: false,
             error: nil,
             history: []
         )
-        
         private var handle: DisposableHandle?
         
         init(historyDataSource: HistoryDataSource, translateUseCase: Translate) {
@@ -35,7 +34,6 @@ extension TranslateScreen {
             self.translateUseCase = translateUseCase
             self.viewModel = TranslateViewModel(translate: translateUseCase, historyDataSource: historyDataSource, coroutineScope: nil)
         }
-        
         
         func onEvent(event: TranslateEvent) {
             self.viewModel.onEvent(event: event)
@@ -48,7 +46,6 @@ extension TranslateScreen {
                 }
             })
         }
-
         
         func dispose() {
             handle?.dispose()

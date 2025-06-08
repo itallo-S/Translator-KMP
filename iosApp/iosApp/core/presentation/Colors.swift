@@ -46,10 +46,10 @@ private extension UIColor {
     convenience init(light: UIColor, dark: UIColor) {
         self.init { traits in
             switch traits.userInterfaceStyle {
-            case .light, .unspecified:
-                return light
             case .dark:
                 return dark
+            case .light, .unspecified:
+                return light
             @unknown default:
                 return light
             }

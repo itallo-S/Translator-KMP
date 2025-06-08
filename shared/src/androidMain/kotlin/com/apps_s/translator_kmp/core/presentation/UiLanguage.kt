@@ -19,6 +19,7 @@ actual class UiLanguage(
             Language.ITALIAN -> Locale.ITALIAN
             Language.JAPANESE -> Locale.JAPANESE
             Language.KOREAN -> Locale.KOREAN
+            Language.PORTUGUESE -> Locale("pt", "BR")
             else -> null
         }
     }

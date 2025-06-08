@@ -13,7 +13,7 @@ struct GradientSurface: ViewModifier {
     
     func body(content: Content) -> some View {
         if colorScheme == .dark {
-            let gradientStart = Color(hex: 0xFF2326E)
+            let gradientStart = Color(hex: 0xFF23262E)
             let gradientEnd = Color(hex: 0xFF212329)
             content.background(
                 LinearGradient(
