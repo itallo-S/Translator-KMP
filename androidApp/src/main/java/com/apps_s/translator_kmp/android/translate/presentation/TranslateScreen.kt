@@ -3,7 +3,9 @@ package com.apps_s.translator_kmp.android.translate.presentation
 import android.content.ClipData
 import android.speech.tts.TextToSpeech
 import android.widget.Toast
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -24,6 +26,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.ClipEntry
 import androidx.compose.ui.platform.LocalClipboard
@@ -95,40 +98,35 @@ fun TranslateScreen(
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
             item {
-                Row(
+                Box(
                     modifier = Modifier.fillMaxWidth(),
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.SpaceBetween
+                    contentAlignment = Alignment.Center
                 ) {
-                    LanguageDropDown(
-                        language = state.fromLanguage,
-                        isOpen = state.isChoosingFromLanguage,
-                        onClick = {
-                            onEvent(TranslateEvent.OpenFromLanguageDropDown)
-                        },
-                        onDismiss = {
-                            onEvent(TranslateEvent.StopChoosingLanguage)
-                        },
-                        onSelectLanguage = {
-                            onEvent(TranslateEvent.ChooseFromLanguage(it))
-                        })
-                    Spacer(modifier = Modifier.weight(1f))
-                    SwapLanguagesButton(onClick = {
-                        onEvent(TranslateEvent.SwapLanguages)
-                    })
-                    Spacer(modifier = Modifier.weight(1f))
-                    LanguageDropDown(
-                        language = state.toLanguage,
-                        isOpen = state.isChoosingToLanguage,
-                        onClick = {
-                            onEvent(TranslateEvent.OpenToLanguageDropDown)
-                        },
-                        onDismiss = {
-                            onEvent(TranslateEvent.StopChoosingLanguage)
-                        },
-                        onSelectLanguage = {
-                            onEvent(TranslateEvent.ChooseToLanguage(it))
-                        })
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                    ) {
+                        LanguageDropDown(
+                            language = state.fromLanguage,
+                            isOpen = state.isChoosingFromLanguage,
+                            onClick = { onEvent(TranslateEvent.OpenFromLanguageDropDown) },
+                            onDismiss = { onEvent(TranslateEvent.StopChoosingLanguage) },
+                            onSelectLanguage = { onEvent(TranslateEvent.ChooseFromLanguage(it)) }
+                        )
+
+                        LanguageDropDown(
+                            language = state.toLanguage,
+                            isOpen = state.isChoosingToLanguage,
+                            onClick = { onEvent(TranslateEvent.OpenToLanguageDropDown) },
+                            onDismiss = { onEvent(TranslateEvent.StopChoosingLanguage) },
+                            onSelectLanguage = { onEvent(TranslateEvent.ChooseToLanguage(it)) }
+                        )
+                    }
+                    SwapLanguagesButton(
+                        onClick = { onEvent(TranslateEvent.SwapLanguages) }
+                    )
+
                 }
             }
             item {

@@ -29,7 +29,7 @@ fun LanguageDropDownItem(
             Image(
                 painter = painterResource(language.drawableRes),
                 contentDescription = language.language.langName,
-                modifier = Modifier.size(40.dp)
+                modifier = Modifier.size(30.dp)
             )
         },
 

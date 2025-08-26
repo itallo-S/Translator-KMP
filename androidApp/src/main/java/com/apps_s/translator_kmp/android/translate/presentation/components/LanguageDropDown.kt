@@ -1,5 +1,6 @@
 package com.apps_s.translator_kmp.android.translate.presentation.components
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
@@ -11,9 +12,11 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import com.apps_s.translator_kmp.android.R
 import com.apps_s.translator_kmp.android.TranslatorTheme
@@ -46,20 +49,20 @@ fun LanguageDropDown(
         }
         Row(
             modifier = Modifier
-                .clickable(onClick = onClick)
-                .padding(16.dp),
+                .clickable(onClick = onClick),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
             AsyncImage(
                 model = language.drawableRes,
                 contentDescription = language.language.langName,
-                modifier = Modifier.size(30.dp)
+                modifier = Modifier.size(20.dp)
             )
-            Spacer(modifier = Modifier.width(16.dp))
+            Spacer(modifier = Modifier.width(8.dp))
             Text(
                 text = language.language.langName,
-                color = LightBlue
+                color = LightBlue,
+                fontSize = 16.sp
             )
             Icon(
                 imageVector = if(isOpen) Icons.Default.ArrowDropUp else Icons.Default.ArrowDropDown,

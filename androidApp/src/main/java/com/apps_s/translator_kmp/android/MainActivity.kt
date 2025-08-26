@@ -67,7 +67,7 @@ fun TranslateRoot(modifier: Modifier = Modifier) {
             }
 
             TranslateScreen(
-                state = state,
+                    state = state,
                 onEvent = { event ->
                     when(event) {
                         is TranslateEvent.RecordAudio -> {

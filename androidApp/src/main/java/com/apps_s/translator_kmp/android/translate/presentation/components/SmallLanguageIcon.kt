@@ -15,6 +15,6 @@ fun SmallLanguageIcon(
     AsyncImage(
         model = language.drawableRes,
         contentDescription = language.language.langName,
-        modifier = modifier.size(24.dp)
+        modifier = modifier.size(20.dp)
     )
 }
